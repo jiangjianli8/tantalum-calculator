@@ -253,7 +253,7 @@ function fetchPrice(){
   fetchLiveFX()
 }
 function fetchLiveFX(){
-  fetch("https://api.frankfurter.dev/latest?from=USD&to=CNY").then(function(r){return r.json()}).then(function(data){
+  fetch("https://open.er-api.com/v6/latest/USD").then(function(r){return r.json()}).then(function(data){
     if(data.rates&&data.rates.CNY>0){exchangeRate=data.rates.CNY;document.getElementById("fxDisplay").textContent=exchangeRate.toFixed(4);updateCalcDisplay()}
   }).catch(function(){})
 }
