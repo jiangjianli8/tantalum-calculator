@@ -11,597 +11,322 @@
   --card2: #2a2a38;
   --text: #e0e0e0;
   --text2: #a0a0b0;
-  --ta: #7c6ff7;
-  --ta-light: #a89bf5;
-  --ta-dark: #4a3f9e;
-  --nb: #4ecdc4;
-  --nb-light: #6ee7de;
-  --gold: #daa520;
+  --primary: #8b5cf6;
+  --primary-light: #a78bfa;
+  --primary-dark: #6d28d9;
   --accent: #4ecdc4;
+  --gold: #daa520;
   --danger: #e05555;
   --border: #3a3a48;
   --radius: 12px;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  padding: 16px;
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;display:flex;justify-content:center;padding:16px
 }
-.container { width:100%; max-width:520px; }
-.header {
-  text-align: center;
-  padding: 24px 0 16px;
+.container{width:100%;max-width:520px}
+.header{text-align:center;padding:24px 0 16px}
+.header h1{
+  font-size:2rem;font-weight:900;
+  background:linear-gradient(135deg,var(--primary-light),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
 }
-.header h1 {
-  font-size: 2.2rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, var(--ta-light), var(--nb-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.header .subtitle{font-size:.8rem;color:var(--text2);margin-top:4px}
+.price-card{
+  background:linear-gradient(135deg,#1e1a2e,#1a1428);border:1px solid var(--primary-dark);
+  border-radius:var(--radius);padding:16px 20px;margin-bottom:16px;position:relative;overflow:hidden
 }
-.header .subtitle {
-  font-size: 0.8rem;
-  color: var(--text2);
-  margin-top: 4px;
+.price-card::before{
+  content:'';position:absolute;top:-50%;right:-30%;width:120px;height:120px;
+  background:radial-gradient(circle,rgba(139,92,246,.15) 0%,transparent 70%);border-radius:50%
 }
-
-/* 矿种切换 */
-.ore-switch {
-  display: flex;
-  gap: 0;
-  margin-bottom: 16px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--border);
+.price-label{font-size:.75rem;color:var(--primary-light);letter-spacing:2px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.price-label .dot{width:8px;height:8px;background:#4caf50;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 4px #4caf50}50%{opacity:.4;box-shadow:0 0 8px #4caf50}}
+.price-value{font-size:2.4rem;font-weight:800;color:var(--primary-light);line-height:1}
+.price-value .unit{font-size:.9rem;font-weight:400;color:var(--text2);margin-left:4px}
+.price-meta{font-size:.7rem;color:var(--text2);margin-top:4px;display:flex;justify-content:space-between;align-items:center}
+.price-error{font-size:.7rem;color:var(--danger)}
+.refresh-btn{
+  background:rgba(139,92,246,.2);border:1px solid var(--primary-dark);color:var(--primary-light);
+  padding:4px 12px;border-radius:20px;font-size:.7rem;cursor:pointer;transition:all .2s
 }
-.ore-switch button {
-  flex: 1;
-  padding: 10px 16px;
-  border: none;
-  background: var(--card);
-  color: var(--text2);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+.refresh-btn:hover{background:rgba(139,92,246,.35)}
+.refresh-btn:active{transform:scale(.95)}
+.manual-price{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:.75rem}
+.manual-price input{
+  background:var(--bg);border:1px solid var(--border);color:var(--text);
+  padding:4px 10px;border-radius:6px;width:100px;font-size:.75rem;text-align:center
 }
-.ore-switch button.active-ta {
-  background: linear-gradient(135deg, rgba(124,111,247,0.25), rgba(74,63,158,0.3));
-  color: var(--ta-light);
-  border-bottom: 2px solid var(--ta);
+.manual-price button{
+  background:var(--primary-dark);border:none;color:#fff;padding:4px 12px;border-radius:6px;font-size:.7rem;cursor:pointer
 }
-.ore-switch button.active-nb {
-  background: linear-gradient(135deg, rgba(78,205,196,0.25), rgba(46,150,140,0.3));
-  color: var(--nb-light);
-  border-bottom: 2px solid var(--nb);
+.manual-price .toggle{font-size:.65rem;color:var(--primary-light);cursor:pointer;text-decoration:underline}
+.fx-row{
+  display:flex;justify-content:space-between;align-items:center;margin-top:10px;
+  font-size:.7rem;color:var(--text2);padding-top:8px;border-top:1px solid var(--border)
 }
-
-/* 价格卡片 */
-.price-card {
-  background: linear-gradient(135deg, #1e1a2e, #1a1628);
-  border: 1px solid var(--ta-dark);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  margin-bottom: 16px;
-  position: relative;
-  overflow: hidden;
+.fx-row .fx-value{color:var(--accent);font-weight:600}
+.calc-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.calc-card h2{font-size:.9rem;font-weight:600;color:var(--text2);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.calc-card h2 .icon{font-size:1.2rem}
+.grade-section{margin-bottom:16px}
+.grade-label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.grade-label .name{font-size:.8rem;color:var(--text2)}
+.grade-label .value{font-size:1.8rem;font-weight:700;color:var(--primary-light)}
+.grade-label .value .pct{font-size:1rem;color:var(--text2)}
+.slider-wrap{position:relative;padding:4px 0}
+input[type=range]{
+  -webkit-appearance:none;width:100%;height:8px;border-radius:4px;
+  background:linear-gradient(90deg,#2a1a5a,var(--primary),var(--primary-light));outline:none
 }
-.price-card.nb-card { border-color: #2a5a55; background: linear-gradient(135deg, #1a2826, #162320); }
-.price-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -30%;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:36px;height:36px;border-radius:50%;
+  background:var(--primary-light);border:3px solid #fff;cursor:pointer;box-shadow:0 2px 12px rgba(139,92,246,.5)
 }
-.price-card:not(.nb-card)::before { background: radial-gradient(circle, rgba(124,111,247,0.12) 0%, transparent 70%); }
-.price-card.nb-card::before { background: radial-gradient(circle, rgba(78,205,196,0.12) 0%, transparent 70%); }
-.price-label {
-  font-size: 0.75rem;
-  color: var(--ta-light);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.grade-ticks{display:flex;justify-content:space-between;font-size:.6rem;color:var(--text2);padding:4px 0 0}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.presets button{
+  background:var(--card2);border:1px solid var(--border);color:var(--text2);
+  padding:5px 12px;border-radius:16px;font-size:.7rem;cursor:pointer;transition:all .2s
 }
-.nb-card .price-label { color: var(--nb-light); }
-.price-label .dot {
-  width: 8px; height: 8px;
-  background: #4caf50;
-  border-radius: 50%;
-  animation: pulse 2s infinite;
+.presets button:hover{border-color:var(--primary);color:var(--primary-light)}
+.presets button.active{background:var(--primary-dark);border-color:var(--primary-light);color:#fff}
+.vat-section{
+  display:flex;align-items:center;gap:10px;margin:16px 0;
+  padding:12px 16px;background:var(--card2);border-radius:var(--radius)
 }
-@keyframes pulse {
-  0%,100% { opacity:1; box-shadow: 0 0 4px #4caf50; }
-  50% { opacity:0.4; box-shadow: 0 0 8px #4caf50; }
+.vat-section .label{font-size:.8rem;color:var(--text2);white-space:nowrap}
+.vat-section input{
+  background:var(--bg);border:1px solid var(--border);color:var(--text);
+  padding:6px 10px;border-radius:6px;width:70px;font-size:.8rem;text-align:center
 }
-.price-value {
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: var(--ta-light);
-  line-height: 1;
+.vat-section .suffix{font-size:.8rem;color:var(--text2)}
+.results{display:grid;gap:10px}
+.result-item{
+  background:var(--card2);border-radius:10px;padding:14px 16px;
+  display:flex;justify-content:space-between;align-items:center
 }
-.nb-card .price-value { color: var(--nb-light); }
-.price-value .unit {
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: var(--text2);
-  margin-left: 4px;
+.result-item .r-label{font-size:.75rem;color:var(--text2)}
+.result-item .r-value{font-size:1.2rem;font-weight:700;color:var(--primary-light);text-align:right}
+.result-item .r-unit{font-size:.7rem;color:var(--text2);font-weight:400}
+.result-item.highlight{
+  background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(78,205,196,.1));
+  border:1px solid var(--primary-dark)
 }
-.price-meta {
-  font-size: 0.7rem;
-  color: var(--text2);
-  margin-top: 4px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.result-item.highlight .r-value{font-size:1.6rem;color:var(--accent)}
+.batch-section{margin-top:12px}
+.batch-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.batch-header span{font-size:.8rem;color:var(--text2)}
+.batch-header button{
+  background:var(--primary-dark);border:none;color:#fff;
+  padding:4px 12px;border-radius:14px;font-size:.7rem;cursor:pointer
 }
-.manual-price {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  font-size: 0.75rem;
+.ore-row{
+  display:flex;align-items:center;gap:8px;padding:10px 12px;
+  background:var(--card2);border-radius:8px;margin-bottom:6px
 }
-.manual-price input {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 4px 10px;
-  border-radius: 6px;
-  width: 100px;
-  font-size: 0.75rem;
-  text-align: center;
+.ore-row .ore-grade{display:flex;align-items:center;gap:4px;flex:1}
+.ore-row input{
+  background:var(--bg);border:1px solid var(--border);color:var(--text);
+  padding:4px 8px;border-radius:6px;width:60px;font-size:.75rem;text-align:center
 }
-.manual-price button {
-  background: var(--ta-dark);
-  border: none;
-  color: #fff;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  cursor: pointer;
+.ore-row .ore-result{font-size:.85rem;font-weight:600;color:var(--primary-light);white-space:nowrap}
+.ore-row .ore-del{background:none;border:none;color:var(--danger);font-size:1.2rem;cursor:pointer;padding:2px 6px}
+.total-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;background:var(--primary-dark);border-radius:10px;margin-top:8px;font-weight:700
 }
-.nb-card .manual-price button { background: #2a5a55; }
-
-/* 计算器卡片 */
-.calc-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 16px;
+.total-row .total-label{font-size:.8rem}
+.total-row .total-value{font-size:1.3rem;color:#fff}
+.note{
+  background:var(--card2);border-left:3px solid var(--primary);
+  padding:10px 14px;border-radius:0 var(--radius) var(--radius) 0;
+  font-size:.7rem;color:var(--text2);margin-bottom:16px;line-height:1.5
 }
-.calc-card h2 {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text2);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.footer{text-align:center;padding:24px 0}
+.footer span{font-weight:900;color:#2196F3;font-size:1.5rem}
+.spinner{
+  display:inline-block;width:14px;height:14px;border:2px solid var(--border);
+  border-top-color:var(--primary-light);border-radius:50%;animation:spin .6s linear infinite
 }
-
-/* 品位滑块 */
-.grade-section { margin-bottom: 16px; }
-.grade-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8px;
-}
-.grade-label .name { font-size: 0.8rem; color: var(--text2); }
-.grade-label .value {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--ta-light);
-}
-.grade-label .value .pct { font-size: 1rem; color: var(--text2); }
-input[type=range] {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 8px;
-  border-radius: 4px;
-  background: linear-gradient(90deg, #3a2f6e, var(--ta), var(--nb));
-  outline: none;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: var(--ta-light);
-  border: 3px solid #fff;
-  cursor: pointer;
-  box-shadow: 0 2px 12px rgba(124,111,247,0.5);
-}
-.grade-ticks {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.6rem;
-  color: var(--text2);
-  padding: 4px 8px 0;
-}
-.grade-presets {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-.grade-presets button {
-  background: var(--card2);
-  border: 1px solid var(--border);
-  color: var(--text2);
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.7rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.grade-presets button:hover { border-color: var(--ta); color: var(--ta-light); }
-.grade-presets button.active { background: rgba(124,111,247,0.2); border-color: var(--ta); color: var(--ta-light); }
-
-/* 汇率 & 增值税 */
-.input-row {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.input-group {
-  flex: 1;
-}
-.input-group label {
-  font-size: 0.7rem;
-  color: var(--text2);
-  display: block;
-  margin-bottom: 4px;
-}
-.input-group input {
-  width: 100%;
-  padding: 10px 12px;
-  background: var(--card2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 0.95rem;
-  text-align: center;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.input-group input:focus { border-color: var(--ta); }
-
-/* 结果卡片 */
-.results-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.result-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px;
-  text-align: center;
-}
-.result-card.main-result {
-  grid-column: 1 / -1;
-  background: linear-gradient(135deg, #1e1a2e, #1a1628);
-  border: 2px solid var(--ta-dark);
-}
-.result-card.main-result.nb-main {
-  background: linear-gradient(135deg, #1a2826, #162320);
-  border-color: #2a5a55;
-}
-.result-card .r-label {
-  font-size: 0.7rem;
-  color: var(--text2);
-  margin-bottom: 4px;
-}
-.result-card .r-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--ta-light);
-}
-.result-card.main-result .r-value { font-size: 2.2rem; color: var(--gold); }
-.result-card .r-unit {
-  font-size: 0.7rem;
-  color: var(--text2);
-  margin-top: 2px;
-}
-.result-card.main-result .r-formula {
-  font-size: 0.65rem;
-  color: var(--text2);
-  margin-top: 6px;
-  line-height: 1.5;
-}
-
-/* Footer */
-.footer {
-  text-align: center;
-  padding: 16px;
-  font-size: 0.65rem;
-  color: var(--text2);
-}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
     <h1>钽铌矿计价计算器</h1>
-    <div class="subtitle">Ta&#x2082;O&#x2085; / Nb&#x2082;O&#x2085; Ore Price Calculator</div>
+    <div class="subtitle">Ta&#8322;O&#8325; / Nb&#8322;O&#8325; · CIF 到岸价 · 实时汇率</div>
   </div>
 
-  <!-- 矿种切换 -->
-  <div class="ore-switch">
-    <button id="btnTa" class="active-ta" onclick="switchOre('ta')">&#x2692; 钽矿 Ta&#x2082;O&#x2085;</button>
-    <button id="btnNb" onclick="switchOre('nb')">&#x2692; 铌矿 Nb&#x2082;O&#x2085;</button>
-  </div>
-
-  <!-- 国际价格 -->
-  <div class="price-card" id="priceCard">
-    <div class="price-label"><span class="dot"></span> 国际参考价格（美元/磅）</div>
-    <div class="price-value" id="priceDisplay">232.5<span class="unit">$/lb</span></div>
+  <div class="price-card">
+    <div class="price-label">
+      <span class="dot" id="statusDot"></span>
+      <span>SMM 上海有色网 · 30% 钽铌矿行情</span>
+    </div>
+    <div class="price-value" id="priceDisplay"><span class="spinner"></span></div>
     <div class="price-meta">
-      <span id="priceTime">手动输入模式</span>
+      <span id="priceTime">加载中...</span>
+      <button class="refresh-btn" onclick="fetchPrice()">刷新</button>
     </div>
-    <div class="manual-price">
-      <input type="number" id="manualPriceInput" value="232.5" step="0.01" min="0" placeholder="$/lb">
-      <button onclick="setManualPrice()">更新价格</button>
+    <div class="manual-price" id="manualPriceRow" style="display:none">
+      <span>手动：</span>
+      <input type="number" id="manualPriceInput" placeholder="美元/磅" step="0.01">
+      <button onclick="setManualPrice()">确定</button>
+      <span class="toggle" onclick="resetPrice()">恢复默认</span>
+    </div>
+    <div class="manual-price" style="margin-top:6px">
+      <span class="toggle" onclick="toggleManualPrice()" style="font-size:.7rem;color:var(--text2)">✎ 手动输入价格</span>
+    </div>
+    <div class="fx-row">
+      <span>实时汇率 USD/CNY</span>
+      <span class="fx-value" id="fxDisplay">加载中...</span>
     </div>
   </div>
 
-  <!-- 计算器 -->
   <div class="calc-card">
-    <h2>&#x2699; 计价参数</h2>
-
+    <h2><span class="icon">🧮</span>计价计算</h2>
     <div class="grade-section">
       <div class="grade-label">
-        <span class="name">含量品位</span>
-        <span class="value" id="gradeValue">30.0<span class="pct">%</span></span>
+        <span class="name">钽铌矿品位 (Ta₂O₅+Nb₂O₅)</span>
+        <span class="value" id="gradeValue">30<span class="pct">%</span></span>
       </div>
       <div class="slider-wrap">
-        <input type="range" id="gradeSlider" min="1" max="60" value="30" step="0.1" oninput="updateCalc()">
+        <input type="range" id="gradeSlider" min="1" max="50" value="30" step="0.1" oninput="updateCalc()">
       </div>
-      <div class="grade-ticks">
-        <span>1%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span><span>60%</span>
-      </div>
-      <div class="grade-presets" id="gradePresets"></div>
+      <div class="grade-ticks"><span>1%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span></div>
     </div>
-
-    <div class="input-row">
-      <div class="input-group">
-        <label>汇率 (美元&#x2192;人民币) <span style="color:#4caf50;font-size:0.6rem" id="fxStatus">实时</span></label>
-        <input type="number" id="exchangeRate" value="7.00" step="0.01" min="0" onchange="onFxManual()" onfocus="onFxManual()">
-        <div style="font-size:0.6rem;color:var(--text2);margin-top:2px" id="fxSource"></div>
+    <div class="presets" id="gradePresets"></div>
+    <div class="vat-section">
+      <span class="label">增值税率</span>
+      <input type="number" id="vatRate" value="13" min="0" max="20" step="0.5" onchange="updateCalc()">
+      <span class="suffix">%</span>
+    </div>
+    <div class="results">
+      <div class="result-item">
+        <span class="r-label">CIF 到岸价</span>
+        <span><span class="r-value" id="cifPrice">-</span> <span class="r-unit">美元/吨</span></span>
       </div>
-      <div class="input-group">
-        <label>增值税率</label>
-        <div style="position:relative;display:flex;align-items:center"><input type="number" id="vatRate" value="13" step="0.1" min="0" max="100" onchange="updateCalc()" style="padding-right:28px"><span style="position:absolute;right:12px;color:var(--text2);font-size:0.85rem;pointer-events:none">%</span></div>
+      <div class="result-item">
+        <span class="r-label">国内税前价</span>
+        <span><span class="r-value" id="pretaxPrice">-</span> <span class="r-unit">元/吨</span></span>
+      </div>
+      <div class="result-item highlight">
+        <span class="r-label">国内税后价</span>
+        <span><span class="r-value" id="aftertaxPrice">-</span> <span class="r-unit">元/吨</span></span>
+      </div>
+      <div class="result-item">
+        <span class="r-label">吨度价</span>
+        <span><span class="r-value" id="tonDegreePrice">-</span> <span class="r-unit">元/吨度</span></span>
       </div>
     </div>
   </div>
 
-  <!-- 结果 -->
-  <div class="results-section">
-    <div class="result-card main-result" id="mainResultCard">
-      <div class="r-label">&#x1F4B0; 国内税后价格（含增值税）</div>
-      <div class="r-value" id="afterTaxPrice">--</div>
-      <div class="r-unit">元 / 吨</div>
-      <div class="r-formula" id="formulaDisplay"></div>
-    </div>
-    <div class="result-card">
-      <div class="r-label">国际到岸价 (CIF)</div>
-      <div class="r-value" id="cifPrice">--</div>
-      <div class="r-unit">$ / 吨</div>
-    </div>
-    <div class="result-card">
-      <div class="r-label">国内税前价格</div>
-      <div class="r-value" id="preTaxPrice">--</div>
-      <div class="r-unit">元 / 吨</div>
-    </div>
-    <div class="result-card">
-      <div class="r-label">含税吨度价格</div>
-      <div class="r-value" id="tonDegreePrice">--</div>
-      <div class="r-unit">元 / 吨度</div>
-    </div>
+  <div class="note">
+    <strong>计算公式：</strong><br>
+    CIF 到岸价(美元/吨) = 国际价格(美元/磅) × 2204.6226 × 品位%<br>
+    国内税前(元/吨) = CIF × 汇率<br>
+    国内税后(元/吨) = 国内税前 × (1 + 增值税率)<br>
+    吨度价(元/吨度) = 国内税后 ÷ 品位
   </div>
 
   <div class="footer">
-    <span style="font-weight:900;color:#2196F3;font-size:1.95rem">矿链通1.0</span>
-    <span style="font-weight:900;color:#2196F3;font-size:1.95rem">-佛山鑫善源</span>
+    <span>矿链通1.0</span>
+    <span>-佛山鑫善源</span>
   </div>
 </div>
 
 <script>
-var LBS_PER_TON = 2204.6226218;
-var currentOre = 'ta';
-var basePrice = 232.5;  // $/lb
-var manualOverride = false;
-var fxManual = false;
-var currentFxRate = 7.00;
-
-function switchOre(type) {
-  currentOre = type;
-  var btnTa = document.getElementById('btnTa');
-  var btnNb = document.getElementById('btnNb');
-  var card = document.getElementById('priceCard');
-  var mainCard = document.getElementById('mainResultCard');
-
-  if (type === 'ta') {
-    btnTa.className = 'active-ta';
-    btnNb.className = '';
-    card.classList.remove('nb-card');
-    mainCard.classList.remove('nb-main');
-  } else {
-    btnTa.className = '';
-    btnNb.className = 'active-nb';
-    card.classList.add('nb-card');
-    mainCard.classList.add('nb-main');
-  }
-  updateCalc();
+var basePrice=232.5,exchangeRate=7.25,manualOverride=false,LBS_PER_TON=2204.6226;
+function fetchPrice(){
+  var d=document.getElementById("priceDisplay"),t=document.getElementById("priceTime"),dot=document.getElementById("statusDot");
+  d.innerHTML='<span class="spinner"></span>';dot.style.background="#daa520";
+  fetch("data/price.json?t="+Date.now()).then(function(r){return r.json()}).then(function(data){
+    if(data.intl_price&&data.intl_price>0&&!manualOverride)basePrice=data.intl_price;
+    if(data.exchange_rate&&data.exchange_rate>0){exchangeRate=data.exchange_rate;document.getElementById("fxDisplay").textContent=exchangeRate.toFixed(4)}
+    d.innerHTML="$"+basePrice.toFixed(1)+'<span class="unit">/磅</span>';
+    t.textContent=data.updated_at?"更新于 "+data.updated_at:"实时数据";
+    dot.style.background="#4caf50";updateCalcDisplay()
+  }).catch(function(){useDefaults(d,t,dot);fetchLiveFX()});
+  fetchLiveFX()
 }
-
-function fetchFxRate() {
-  var API_LIST = [
-    'https://api.frankfurter.app/latest?from=USD&to=CNY',
-    'https://api.exchangerate-api.com/v4/latest/USD',
-    'https://open.er-api.com/v6/latest/USD'
-  ];
-
-  function tryApi(idx) {
-    if (idx >= API_LIST.length) {
-      document.getElementById('fxStatus').textContent = '离线';
-      document.getElementById('fxStatus').style.color = '#e05555';
-      document.getElementById('fxSource').textContent = 'API 不可用，使用手动汇率';
-      return;
-    }
-
-    fetch(API_LIST[idx], { signal: AbortSignal.timeout(8000) })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        var rate;
-        var dateStr = '';
-        if (data.rates && data.rates.CNY) {
-          rate = data.rates.CNY;
-          dateStr = data.date || '';
-        } else if (data.rates && data.rates.CNY) {
-          rate = data.rates.CNY;
-        }
-
-        if (rate && rate > 0) {
-          currentFxRate = parseFloat(rate.toFixed(4));
-          if (!fxManual) {
-            document.getElementById('exchangeRate').value = currentFxRate;
-          }
-          document.getElementById('fxStatus').textContent = '实时';
-          document.getElementById('fxStatus').style.color = '#4caf50';
-          document.getElementById('fxSource').textContent = '来源: ' + (API_LIST[idx].split('/')[2]) + (dateStr ? ' (' + dateStr + ')' : '');
-          if (!fxManual) updateCalc();
-        } else {
-          tryApi(idx + 1);
-        }
-      })
-      .catch(function() {
-        tryApi(idx + 1);
-      });
-  }
-
-  tryApi(0);
+function fetchLiveFX(){
+  fetch("https://api.frankfurter.dev/latest?from=USD&to=CNY").then(function(r){return r.json()}).then(function(data){
+    if(data.rates&&data.rates.CNY>0){exchangeRate=data.rates.CNY;document.getElementById("fxDisplay").textContent=exchangeRate.toFixed(4);updateCalcDisplay()}
+  }).catch(function(){})
 }
-
-function onFxManual() {
-  fxManual = true;
-  document.getElementById('fxStatus').textContent = '手动';
-  document.getElementById('fxStatus').style.color = '#daa520';
-  document.getElementById('fxSource').textContent = '手动输入汇率';
+function useDefaults(d,t,dot){
+  d.innerHTML="$"+basePrice.toFixed(1)+'<span class="unit">/磅</span>';
+  t.innerHTML='<span class="price-error">离线模式 · 使用默认参考价</span>';
+  document.getElementById("fxDisplay").textContent=exchangeRate.toFixed(4)+" (默认)";
+  dot.style.background="#e05555";updateCalcDisplay()
 }
-
-function updateCalc() {
-  var grade = parseFloat(document.getElementById('gradeSlider').value);
-  var fx = parseFloat(document.getElementById('exchangeRate').value) || 7.0;
-  var vatPct = parseFloat(document.getElementById('vatRate').value) || 13;
-
-  var gradeFrac = grade / 100;
-  var vatMul = 1 + vatPct / 100;
-
-  var cifPrice = basePrice * LBS_PER_TON * gradeFrac;
-  var preTaxPrice = cifPrice * fx;
-  var afterTax = preTaxPrice * vatMul;
-  var tonDegree = grade > 0 ? afterTax / grade : 0;
-
-  document.getElementById('gradeValue').innerHTML = grade.toFixed(1) + '<span class="pct">%</span>';
-
-  document.getElementById('cifPrice').textContent = '$' + cifPrice.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
-  document.getElementById('preTaxPrice').textContent = preTaxPrice.toLocaleString('zh-CN', {minimumFractionDigits:0, maximumFractionDigits:0});
-  document.getElementById('afterTaxPrice').textContent = afterTax.toLocaleString('zh-CN', {minimumFractionDigits:0, maximumFractionDigits:0});
-  document.getElementById('tonDegreePrice').textContent = tonDegree.toLocaleString('zh-CN', {minimumFractionDigits:0, maximumFractionDigits:0});
-
-  document.getElementById('formulaDisplay').textContent =
-    '$' + basePrice + '/lb x ' + LBS_PER_TON + 'lb/t x ' + grade.toFixed(1) + '% = $' + cifPrice.toFixed(0) + '/t CIF' +
-    ' | $' + cifPrice.toFixed(0) + ' x ' + fx + ' = ' + preTaxPrice.toFixed(0) + ' 元/t' +
-    ' | ' + preTaxPrice.toFixed(0) + ' x ' + vatMul + ' = ' + afterTax.toFixed(0) + ' 元/t (含' + vatPct + '%增值税)';
-
-  updatePresetButtons(grade);
+function updateCalcDisplay(){if(!manualOverride)updateCalc()}
+function setManualPrice(){
+  var v=parseFloat(document.getElementById("manualPriceInput").value);
+  if(v>0){basePrice=v;manualOverride=true;
+    document.getElementById("priceDisplay").innerHTML="$"+v.toFixed(1)+'<span class="unit">/磅</span>';
+    document.getElementById("priceTime").textContent="手动输入价格";updateCalc()}
 }
-
-function setManualPrice() {
-  var val = parseFloat(document.getElementById('manualPriceInput').value);
-  if (val > 0) {
-    basePrice = val;
-    manualOverride = true;
-    document.getElementById('priceDisplay').innerHTML = val.toFixed(1) + '<span class="unit">$/lb</span>';
-    document.getElementById('priceTime').textContent = '手动输入价格';
-    updateCalc();
-  }
+function resetPrice(){manualOverride=false;fetchPrice()}
+function toggleManualPrice(){
+  var r=document.getElementById("manualPriceRow");
+  r.style.display=r.style.display==="none"?"flex":"none"
 }
-
-function buildPresetButtons() {
-  var container = document.getElementById('gradePresets');
-  var presets = [5, 10, 15, 20, 25, 30, 35, 40, 50, 60];
-  presets.forEach(function(g) {
-    var btn = document.createElement('button');
-    btn.textContent = g + '%';
-    btn.onclick = function() {
-      document.getElementById('gradeSlider').value = g;
-      updateCalc();
-    };
-    container.appendChild(btn);
-  });
+function updateCalc(){
+  var g=parseFloat(document.getElementById("gradeSlider").value);
+  var vat=parseFloat(document.getElementById("vatRate").value)||0;
+  document.getElementById("gradeValue").innerHTML=g.toFixed(1)+'<span class="pct">%</span>';
+  updatePresetButtons(g);
+  var cif=basePrice*LBS_PER_TON*(g/100);
+  var pretax=cif*exchangeRate;
+  var aftertax=pretax*(1+vat/100);
+  var td=g>0?aftertax/g:0;
+  document.getElementById("cifPrice").textContent=cif.toFixed(2);
+  document.getElementById("pretaxPrice").textContent=pretax.toFixed(2);
+  document.getElementById("aftertaxPrice").textContent=aftertax.toFixed(2);
+  document.getElementById("tonDegreePrice").textContent=td.toFixed(2);
+  updateMultiOres()
 }
-
-function updatePresetButtons(grade) {
-  var buttons = document.querySelectorAll('#gradePresets button');
-  buttons.forEach(function(btn) {
-    var g = parseInt(btn.textContent);
-    btn.classList.toggle('active', Math.abs(g - grade) < 0.05);
-  });
+function buildPresetButtons(){
+  var c=document.getElementById("gradePresets");
+  [5,10,15,20,25,30,35,40,45,50].forEach(function(g){
+    var b=document.createElement("button");b.textContent=g+"%";
+    b.onclick=function(){document.getElementById("gradeSlider").value=g;updateCalc()};
+    c.appendChild(b)
+  })
 }
-
-function fetchPrice() {
-  // Try to fetch real-time tantalum price from API
-  var API_ENDPOINTS = [
-    'http://localhost:8765/api/tantalum/price'
-  ];
-
-  function tryEndpoint(index) {
-    if (index >= API_ENDPOINTS.length) { return; }
-    var url = API_ENDPOINTS[index];
-    fetch(url, { signal: AbortSignal.timeout(5000) })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (!manualOverride && data.price) {
-          basePrice = data.price;
-          document.getElementById('manualPriceInput').value = data.price;
-          document.getElementById('priceDisplay').innerHTML = data.price.toFixed(1) + '<span class="unit">$/lb</span>';
-          document.getElementById('priceTime').textContent = (data.time || '') + ' - ' + (data.source || '实时行情');
-          updateCalc();
-        }
-      })
-      .catch(function() { tryEndpoint(index + 1); });
-  }
-
-  tryEndpoint(0);
+function updatePresetButtons(grade){
+  document.querySelectorAll("#gradePresets button").forEach(function(b){
+    var g=parseInt(b.textContent);
+    b.classList.toggle("active",Math.abs(g-grade)<0.05)
+  })
 }
-
-function init() {
-  buildPresetButtons();
-  fetchFxRate();
-  updateCalc();
-  fetchPrice();
-  setInterval(fetchFxRate, 600000);
-  setInterval(fetchPrice, 300000); // 5 min refresh
+var oreRows=[30,25,20];
+function renderOreRows(){
+  var l=document.getElementById("oreList");if(!l)return;l.innerHTML="";
+  var vat=parseFloat(document.getElementById("vatRate").value)||0;
+  oreRows.forEach(function(g,i){
+    var cif=basePrice*LBS_PER_TON*(g/100),pretax=cif*exchangeRate,aftertax=pretax*(1+vat/100);
+    l.innerHTML+='<div class="ore-row"><span style="font-size:.7rem;color:var(--text2)">品位</span>'
+      +'<div class="ore-grade"><input type="number" value="'+g+'" min="1" max="50" step="0.1" onchange="updateOreGrade('+i+',this.value)">'
+      +'<span style="font-size:.75rem;color:var(--text2)">%</span></div>'
+      +'<div class="ore-result">¥'+aftertax.toFixed(0)+' /吨</div>'
+      +'<button class="ore-del" onclick="removeOreRow('+i+')">×</button></div>'
+  });updateTotal()
 }
-
+function addOreRow(){oreRows.push(30);document.getElementById("totalRow").style.display="flex";renderOreRows()}
+function removeOreRow(i){oreRows.splice(i,1);if(oreRows.length<=1)document.getElementById("totalRow").style.display="none";renderOreRows()}
+function updateOreGrade(i,v){var g=parseFloat(v);if(isNaN(g)||g<1)g=1;if(g>50)g=50;oreRows[i]=g;renderOreRows()}
+function updateMultiOres(){renderOreRows()}
+function updateTotal(){
+  var total=0,vat=parseFloat(document.getElementById("vatRate").value)||0;
+  oreRows.forEach(function(g){total+=basePrice*LBS_PER_TON*(g/100)*exchangeRate*(1+vat/100)});
+  var e=document.getElementById("totalPrice");if(e)e.textContent="¥"+total.toFixed(0)+" /吨"
+}
+function init(){buildPresetButtons();updateCalc();fetchPrice();setInterval(fetchPrice,60000);setInterval(fetchLiveFX,300000)}
 init();
 </script>
 </body>
