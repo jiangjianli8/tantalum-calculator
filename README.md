@@ -11,11 +11,15 @@
 含税吨度价格 (¥/吨度) = 国内税后 ÷ 品位(%)
 ```
 
+## 在线地址
+
+https://jiangjianli8.github.io/tantalum-calculator/
+
 ## 部署方式
 
 ### 方式一：GitHub Pages（推荐，免费）
 
-1. 将 `tantalum_calculator.html` 推送到 GitHub 仓库
+1. 将 `index.html` 推送到 GitHub 仓库
 2. 在仓库 Settings → Pages 中开启 GitHub Pages
 3. 选择部署分支和目录（建议设为 `/ (root)` 或 `/docs`）
 

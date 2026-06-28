@@ -31,7 +31,7 @@ class PriceHandler(http.server.BaseHTTPRequestHandler):
         elif self.path == '/' or self.path == '/index.html':
             # Serve the calculator HTML
             try:
-                with open('tantalum_calculator.html', 'r', encoding='utf-8') as f:
+                with open('index.html', 'r', encoding='utf-8') as f:
                     html = f.read()
                 self.send_response(200)
                 self.send_header('Content-Type', 'text/html; charset=utf-8')
