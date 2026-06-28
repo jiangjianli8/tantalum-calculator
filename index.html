@@ -380,8 +380,9 @@ input[type=range]::-webkit-slider-thumb {
 
     <div class="input-row">
       <div class="input-group">
-        <label>汇率 (美元&#x2192;人民币)</label>
-        <input type="number" id="exchangeRate" value="7.00" step="0.01" min="0" onchange="updateCalc()">
+        <label>汇率 (美元&#x2192;人民币) <span style="color:#4caf50;font-size:0.6rem" id="fxStatus">实时</span></label>
+        <input type="number" id="exchangeRate" value="7.00" step="0.01" min="0" onchange="onFxManual()" onfocus="onFxManual()">
+        <div style="font-size:0.6rem;color:var(--text2);margin-top:2px" id="fxSource"></div>
       </div>
       <div class="input-group">
         <label>增值税率</label>
@@ -426,6 +427,8 @@ var LBS_PER_TON = 2204.6226218;
 var currentOre = 'ta';
 var basePrice = 96;  // $/lb
 var manualOverride = false;
+var fxManual = false;
+var currentFxRate = 7.00;
 
 function switchOre(type) {
   currentOre = type;
@@ -446,6 +449,61 @@ function switchOre(type) {
     mainCard.classList.add('nb-main');
   }
   updateCalc();
+}
+
+function fetchFxRate() {
+  var API_LIST = [
+    'https://api.frankfurter.app/latest?from=USD&to=CNY',
+    'https://api.exchangerate-api.com/v4/latest/USD',
+    'https://open.er-api.com/v6/latest/USD'
+  ];
+
+  function tryApi(idx) {
+    if (idx >= API_LIST.length) {
+      document.getElementById('fxStatus').textContent = '离线';
+      document.getElementById('fxStatus').style.color = '#e05555';
+      document.getElementById('fxSource').textContent = 'API 不可用，使用手动汇率';
+      return;
+    }
+
+    fetch(API_LIST[idx], { signal: AbortSignal.timeout(8000) })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var rate;
+        var dateStr = '';
+        if (data.rates && data.rates.CNY) {
+          rate = data.rates.CNY;
+          dateStr = data.date || '';
+        } else if (data.rates && data.rates.CNY) {
+          rate = data.rates.CNY;
+        }
+
+        if (rate && rate > 0) {
+          currentFxRate = parseFloat(rate.toFixed(4));
+          if (!fxManual) {
+            document.getElementById('exchangeRate').value = currentFxRate;
+          }
+          document.getElementById('fxStatus').textContent = '实时';
+          document.getElementById('fxStatus').style.color = '#4caf50';
+          document.getElementById('fxSource').textContent = '来源: ' + (API_LIST[idx].split('/')[2]) + (dateStr ? ' (' + dateStr + ')' : '');
+          if (!fxManual) updateCalc();
+        } else {
+          tryApi(idx + 1);
+        }
+      })
+      .catch(function() {
+        tryApi(idx + 1);
+      });
+  }
+
+  tryApi(0);
+}
+
+function onFxManual() {
+  fxManual = true;
+  document.getElementById('fxStatus').textContent = '手动';
+  document.getElementById('fxStatus').style.color = '#daa520';
+  document.getElementById('fxSource').textContent = '手动输入汇率';
 }
 
 function updateCalc() {
@@ -537,8 +595,10 @@ function fetchPrice() {
 
 function init() {
   buildPresetButtons();
+  fetchFxRate();
   updateCalc();
   fetchPrice();
+  setInterval(fetchFxRate, 600000);
   setInterval(fetchPrice, 300000); // 5 min refresh
 }
 
