@@ -350,12 +350,12 @@ input[type=range]::-webkit-slider-thumb {
   <!-- 国际价格 -->
   <div class="price-card" id="priceCard">
     <div class="price-label"><span class="dot"></span> 国际参考价格（美元/磅）</div>
-    <div class="price-value" id="priceDisplay">96.0<span class="unit">$/lb</span></div>
+    <div class="price-value" id="priceDisplay">232.5<span class="unit">$/lb</span></div>
     <div class="price-meta">
       <span id="priceTime">手动输入模式</span>
     </div>
     <div class="manual-price">
-      <input type="number" id="manualPriceInput" value="96" step="0.1" min="0" placeholder="$/lb">
+      <input type="number" id="manualPriceInput" value="232.5" step="0.01" min="0" placeholder="$/lb">
       <button onclick="setManualPrice()">更新价格</button>
     </div>
   </div>
@@ -386,7 +386,7 @@ input[type=range]::-webkit-slider-thumb {
       </div>
       <div class="input-group">
         <label>增值税率</label>
-        <input type="number" id="vatRate" value="13" step="0.1" min="0" max="100" onchange="updateCalc()">
+        <div style="position:relative;display:flex;align-items:center"><input type="number" id="vatRate" value="13" step="0.1" min="0" max="100" onchange="updateCalc()" style="padding-right:28px"><span style="position:absolute;right:12px;color:var(--text2);font-size:0.85rem;pointer-events:none">%</span></div>
       </div>
     </div>
   </div>
@@ -425,7 +425,7 @@ input[type=range]::-webkit-slider-thumb {
 <script>
 var LBS_PER_TON = 2204.6226218;
 var currentOre = 'ta';
-var basePrice = 96;  // $/lb
+var basePrice = 232.5;  // $/lb
 var manualOverride = false;
 var fxManual = false;
 var currentFxRate = 7.00;
