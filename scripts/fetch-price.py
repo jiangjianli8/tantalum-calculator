@@ -17,12 +17,12 @@ price_data = {
 
 # 1. Fetch live exchange rate from Frankfurter
 try:
-    req = urllib.request.Request("https://api.frankfurter.dev/latest?from=USD&to=CNY")
+    req = urllib.request.Request("https://open.er-api.com/v6/latest/USD")
     with urllib.request.urlopen(req, timeout=15) as resp:
         fx_data = json.loads(resp.read().decode())
         if fx_data.get("rates", {}).get("CNY", 0) > 0:
             price_data["exchange_rate"] = fx_data["rates"]["CNY"]
-            price_data["exchange_rate_source"] = "api.frankfurter.dev"
+            price_data["exchange_rate_source"] = "open.er-api.com"
             print(f"FX: USD/CNY = {price_data['exchange_rate']:.4f}")
 except Exception as e:
     print(f"WARN: FX fetch failed - {e}, using default 7.25")
