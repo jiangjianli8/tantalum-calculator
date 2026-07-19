@@ -632,14 +632,14 @@ input[type=range]::-webkit-slider-thumb:hover {
   font-size: 0.7rem;
 }
 
-/* 钽铌矿特有样式 - 复用镍矿石的大部分样式 */
-.ore-type, .mode-toggle {
+/* 锡矿石特有样式 */
+.mode-toggle {
   display: flex;
   gap: 8px;
   margin-bottom: 16px;
 }
 
-.ore-type button, .mode-toggle button {
+.mode-toggle button {
   flex: 1;
   padding: 12px 8px;
   background: var(--card2);
@@ -652,127 +652,350 @@ input[type=range]::-webkit-slider-thumb:hover {
   font-weight: 600;
 }
 
-.ore-type button:hover, .mode-toggle button:hover {
+.mode-toggle button:hover {
   border-color: var(--primary);
   color: var(--primary-light);
 }
 
-.ore-type button.active, .mode-toggle button.active {
-  background: rgba(156,39,176,0.15);
+.mode-toggle button.active {
+  background: rgba(176,190,197,0.15);
   border-color: var(--primary);
   color: var(--primary-light);
   font-weight: 700;
-  box-shadow: 0 0 15px rgba(156,39,176,0.2);
+  box-shadow: 0 0 15px rgba(176,190,197,0.2);
 }
 
-.param-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.param-item {
-  flex: 1;
+.import-fields {
   background: var(--card2);
-  border-radius: var(--radius-sm);
-  padding: 12px;
-  text-align: center;
   border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  display: none;
 }
 
-.param-item .lbl {
-  font-size: 0.68rem;
+.import-fields .import-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.import-fields .import-row:last-child {
+  margin-bottom: 0;
+}
+
+.import-fields label {
+  font-size: 0.75rem;
   color: var(--text2);
-  margin-bottom: 6px;
-  letter-spacing: 0.3px;
+  min-width: 80px;
 }
 
-.param-item .v {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: var(--accent);
-  text-shadow: 0 0 8px rgba(224,64,251,0.2);
-}
-
-.param-item input {
+.import-fields input {
+  flex: 1;
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text);
-  padding: 6px 8px;
+  padding: 8px 10px;
   border-radius: 8px;
-  width: 90px;
   font-size: 0.8rem;
   text-align: center;
   font-weight: 600;
 }
 
-.param-item input:focus {
+.import-fields input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(176,190,197,0.15);
+}
+
+.import-fields .unit {
+  font-size: 0.7rem;
+  color: var(--text2);
+  min-width: 60px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--card2);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+}
+
+.info-row .label {
+  font-size: 0.78rem;
+  color: var(--text2);
+  letter-spacing: 0.3px;
+}
+
+.info-row .value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.metal-ton {
+  font-size: 0.72rem;
+  color: var(--text2);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+.tc-note {
+  font-size: 0.65rem;
+  color: var(--text2);
+  margin-top: 10px;
+  line-height: 1.5;
+  padding: 10px;
+  background: rgba(176,190,197,0.08);
+  border-radius: 8px;
+}
+
+/* 钽铌矿特有 - 汇率行 */
+.fx-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+
+.fx-row .fx-label {
+  font-size: 0.7rem;
+  color: var(--text2);
+}
+
+.fx-row .fx-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* 钽铌矿特有 - 预设按钮（用的是presets不是grade-presets） */
+.presets {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+.presets button {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.presets button:hover {
+  border-color: var(--primary);
+  color: var(--primary-light);
+  background: rgba(156,39,176,0.1);
+}
+
+.presets button.active {
+  background: rgba(156,39,176,0.2);
+  border-color: var(--primary);
+  color: var(--primary-light);
+  box-shadow: 0 0 10px rgba(156,39,176,0.2);
+}
+
+/* 钽铌矿特有 - 增值税区 */
+.vat-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--card2);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+}
+
+.vat-section .label {
+  font-size: 0.78rem;
+  color: var(--text2);
+}
+
+.vat-section input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 8px;
+  width: 80px;
+  font-size: 0.85rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.vat-section input:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(156,39,176,0.15);
 }
 
-.tax-toggle {
+.vat-section .suffix {
+  font-size: 0.78rem;
+  color: var(--text2);
+}
+
+/* 钽铌矿特有 - 结果列表 */
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.result-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
   padding: 12px 16px;
   background: var(--card2);
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
 }
 
-.tax-toggle .lbl {
-  font-size: 0.75rem;
+.result-item .r-label {
+  font-size: 0.78rem;
   color: var(--text2);
   letter-spacing: 0.3px;
 }
 
-.toggle-sw {
-  position: relative;
-  width: 48px;
-  height: 26px;
+.result-item .r-value {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary-light);
 }
 
-.toggle-sw input { opacity: 0; width: 0; height: 0; }
-
-.toggle-sw .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: var(--border);
-  border-radius: 26px;
-  transition: 0.3s;
-}
-
-.toggle-sw .slider:before {
-  content: "";
-  position: absolute;
-  height: 20px;
-  width: 20px;
-  left: 3px;
-  bottom: 3px;
-  background: #fff;
-  border-radius: 50%;
-  transition: 0.3s;
-}
-
-.toggle-sw input:checked + .slider {
-  background: var(--primary);
-  box-shadow: 0 0 10px rgba(156,39,176,0.3);
-}
-
-.toggle-sw input:checked + .slider:before {
-  transform: translateX(22px);
-}
-
-.toggle-manual {
-  font-size: 0.65rem;
+.result-item .r-unit {
+  font-size: 0.7rem;
   color: var(--text2);
-  cursor: pointer;
-  margin-top: 4px;
+  margin-left: 2px;
+}
+
+.result-item.highlight {
+  background: linear-gradient(135deg, rgba(156,39,176,0.12), rgba(224,64,251,0.08));
+  border: 2px solid var(--primary);
+  box-shadow: 0 0 15px rgba(156,39,176,0.15);
+}
+
+.result-item.highlight .r-value {
+  color: var(--gold);
+  font-size: 1.3rem;
+  text-shadow: 0 0 10px rgba(206,147,216,0.3);
+}
+
+/* spinner */
+.spinner {
   display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 钽铌矿特有 - 多矿石行 */
+.multi-ores { margin-top: 20px; }
+
+.multi-ores h3 {
+  font-size: 0.85rem;
+  color: var(--text2);
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.ore-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 12px;
+  background: var(--card2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.ore-row:hover {
+  border-color: var(--primary-dark);
+}
+
+.ore-row .ore-grade {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ore-row input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px;
+  border-radius: 8px;
+  width: 80px;
+  font-size: 0.85rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.ore-row input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(156,39,176,0.15);
+}
+
+.ore-row .ore-result {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary-light);
+  min-width: 100px;
+  text-align: right;
+}
+
+.ore-row .ore-del {
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  font-size: 1.4rem;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.add-ore-btn {
+  width: 100%;
+  background: none;
+  border: 1px dashed var(--border);
+  color: var(--text2);
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+
+.add-ore-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(224,64,251,0.05);
 }
 
 </style>
