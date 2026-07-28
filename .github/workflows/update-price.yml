@@ -8,11 +8,20 @@ on:
 jobs:
   update-price:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install akshare
 
       - name: Fetch price & exchange rate
         run: python3 scripts/fetch-price.py
