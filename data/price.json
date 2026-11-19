@@ -3,7 +3,7 @@
   "intl_price_unit": "美元/磅",
   "intl_price_desc": "SMM 30%品位钽铌矿 CIF到岸价(每日更新)",
   "vat_rate": 13,
-  "updated_at": "2026-11-19 20:34:50",
+  "updated_at": "2026-11-20 05:59:23",
   "source": "smm_ajax",
   "exchange_rate": 6.6808,
   "exchange_rate_source": "open.er-api.com",
