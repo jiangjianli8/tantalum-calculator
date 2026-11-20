@@ -1172,9 +1172,15 @@ function fetchPrice(){
 
     d.innerHTML="$"+basePrice.toFixed(1)+'<span class="unit">/磅</span>';
 
-    t.textContent=data.updated_at?"更新于 "+data.updated_at:"实时数据";
+    // 修复：抓价失败时脚本写的是默认价，但 updated_at 仍是当前时间，页面看不出。
+    // 现在按 source / is_realtime 显式提示，避免把默认参考价当成实时行情。
+    var isDefault=(data.source==='default')||(data.is_realtime===false);
 
-    dot.style.background="#4caf50";updateCalcDisplay()
+    t.innerHTML=isDefault
+      ?'<span class="price-error">默认参考价 · 非实时（抓价失败）</span>'
+      :(data.updated_at?"更新于 "+data.updated_at:"实时数据");
+
+    dot.style.background=isDefault?"#e05555":"#4caf50";updateCalcDisplay()
 
   }).catch(function(){useDefaults(d,t,dot);fetchLiveFX()});
 
@@ -1204,7 +1210,10 @@ function useDefaults(d,t,dot){
 
 }
 
-function updateCalcDisplay(){if(!manualOverride)updateCalc()}
+// 自动刷新入口（60 秒行情 / 5 分钟汇率都走这里）。
+// 用户正在输入时整轮跳过，否则 updateCalc → updateMultiOres → renderOreRows
+// 会重建行 DOM，把没提交的输入清掉。用户失焦后的下一次刷新会补上。
+function updateCalcDisplay(){if(!manualOverride&&!isEditingInput())updateCalc()}
 
 function setManualPrice(){
 
@@ -1310,6 +1319,17 @@ function renderOreRows(){
 
   });updateTotal()
 
+}
+
+// 用户正在某个输入框里打字时，不要重建行 DOM —— 60 秒自动刷新会清掉未提交的输入。
+// 排除 range/checkbox/radio：拖滑块时焦点也在 <input> 上，但那是正常操作。
+function isEditingInput() {
+  var ae = document.activeElement;
+  if (!ae) return false;
+  if (ae.isContentEditable) return true;
+  if (ae.tagName !== 'INPUT' && ae.tagName !== 'TEXTAREA') return false;
+  var t = (ae.type || 'text').toLowerCase();
+  return t !== 'range' && t !== 'checkbox' && t !== 'radio' && t !== 'button' && t !== 'submit';
 }
 
 function addOreRow(){oreRows.push(30);document.getElementById("totalRow").style.display="flex";renderOreRows()}

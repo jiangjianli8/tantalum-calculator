@@ -20,7 +20,10 @@ price_data = {
     "intl_price_desc": "SMM 30%品位钽铌矿 CIF到岸价(每日更新)",
     "vat_rate": 13,
     "updated_at": now.strftime("%Y-%m-%d %H:%M:%S"),
-    "source": "smm_reference",
+    # 默认标 default：抓不到 SMM 时下面的成功分支会改成 smm_ajax。
+    # 原代码这里直接写 smm_reference，抓价失败时页面仍显示"更新于 xx"，看不出是默认值。
+    "source": "default",
+    "is_realtime": False,
 }
 
 # 1. Live exchange rate from open.er-api.com
@@ -58,6 +61,7 @@ try:
             if avg > 0:
                 price_data["intl_price"] = avg
                 price_data["source"] = "smm_ajax"
+                price_data["is_realtime"] = True
                 price_data["smm_renew_date"] = latest.get("renew_date", "")
                 price_data["smm_high"] = latest.get("high_show", "")
                 price_data["smm_low"] = latest.get("low_show", "")
